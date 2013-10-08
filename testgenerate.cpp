@@ -8,7 +8,7 @@ int main()
         std::cout << i << std::endl;
     }
     std::cout << std::endl;
-    auto b = generate<0,200>();
+    auto b = generate<0,500>();
     for (auto i : b ) {
         std::cout << i << std::endl;
     }
