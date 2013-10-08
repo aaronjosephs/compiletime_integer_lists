@@ -4,29 +4,57 @@
 template <bool B,int ... Nums>
 struct generator;
 
-template <int Limit>
-struct generator<false,Limit>
+template <int Step,int Min,int Limit>
+struct generator<false,Step,Min,Limit>
 {
-    constexpr static std::array<int,Limit>  array
-        = generator<false,Limit,Limit-1>::array;
+    constexpr static std::array<int,(Limit-Min-1)/Step+1>  array
+        = generator<false,Step,Min,Limit,Limit-1>::array; 
+    //-1 because range is not inclusive
 };
 
-template <int Limit, int Num, int ... Nums>
-struct generator<false,Limit,Num,Nums...>
+template <int Step,int Min,int Limit, int Num>
+struct generator<false,Step,Min,Limit,Num>
 {
-    constexpr static std::array<int,Limit>  array 
-        = generator<Num==1,Limit, Num - 1, Num, Nums...>::array;
+    constexpr static std::array<int,(Limit-Min-1)/Step+1>  array 
+        = generator<Num==Min+Step,Step,Min,Limit, Num - Step, Num>::array;
 };
 
-template <int Limit, int ... Nums>
-struct generator<true,Limit,Nums...>
+template <int Step,int Min,int Limit, int Num, int ... Nums>
+struct generator<false,Step,Min,Limit,Num,Nums...>
 {
-    constexpr static std::array<int,Limit>  array{{Nums...}};
+    constexpr static std::array<int,(Limit-Min-1)/Step+1>  array 
+        = generator<Num==Min+Step,Step,Min,Limit, Num - Step, Num, Nums...>::array;
 };
+
+template <int Step,int Min,int Limit, int ... Nums>
+struct generator<true,Step,Min,Limit,Nums...>
+{
+    constexpr static std::array<int,(Limit-Min-1)/Step+1>  array{{Nums...}};
+};
+
+template <int Max>
+constexpr auto generate()
+-> decltype(generator<false,1,0,Max>::array)
+{
+    return generator<false,1,0,Max>::array;
+}
+template <int Min,int Max>
+constexpr auto generate()
+-> decltype(generator<false,1,Min,Max>::array)
+{
+    return generator<false,1,Min,Max>::array;
+}
+template <int Step,int Min,int Max>
+constexpr auto generate()
+-> decltype(generator<false,Step,Min,Max>::array)
+{
+    //static_assert((Max-Min-1) % Step == 0,"Invalid step");
+    return generator<false,Step,Min,Max>::array;
+}
 
 int main()
 {
-    auto a = generator<false,10>::array;
+    auto a = generate<0,11>();
     for (auto i : a ) {
         std::cout << i << std::endl;
     }
