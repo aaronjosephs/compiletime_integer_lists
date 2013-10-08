@@ -1,5 +1,5 @@
 progs = Split( '''
-        array_generator
+        generate
         ''')
 
 cxx = 'c++'
@@ -10,6 +10,6 @@ ldflags += ' -stdlib=libc++ '
 cxx_flags += ' -stdlib=libc++ '
 
 for p in progs:
-    Program(source='{0}.cpp'.format(p),
+    Program(source='test{0}.cpp'.format(p),
             CXXFLAGS=cxx_flags, CPPPATH='..', CXX=cxx,
             LINKFLAGS=ldflags)

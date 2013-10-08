@@ -1,5 +1,4 @@
 #include <array>
-#include <iostream>
 
 template <bool B,int ... Nums>
 struct generator;
@@ -48,15 +47,5 @@ template <int Step,int Min,int Max>
 constexpr auto generate()
 -> decltype(generator<false,Step,Min,Max>::array)
 {
-    //static_assert((Max-Min-1) % Step == 0,"Invalid step");
     return generator<false,Step,Min,Max>::array;
-}
-
-int main()
-{
-    auto a = generate<0,11>();
-    for (auto i : a ) {
-        std::cout << i << std::endl;
-    }
-    return 0;
 }
