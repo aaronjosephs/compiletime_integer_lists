@@ -33,3 +33,22 @@ int main()
 }
 ```
 Remeber the range is not inclusive
+
+There is also an overload of generate that takes a constexpr function
+
+```c++
+#include <iostream>                                                                
+#include <array>                                                                   
+#include "generate_with_function.hpp"                                              
+#include "generate.hpp"                                                            
+                                                                                   
+constexpr int f(const int & i) { return i * i + 4 * i - 3;}                        
+int main()                                                                         
+{                                                                                  
+    auto arr = generate<100,f>();                                                  
+    for (auto i : arr) {                                                           
+        std::cout << i << " ";                                                     
+    }std::cout<<std::endl;                                                         
+    return 0;                                                                      
+}   
+```
