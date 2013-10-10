@@ -1,6 +1,7 @@
 #include <iostream>
 #include <array>
 #include "generate_with_function.hpp"
+#include "generate.hpp"
 
 constexpr int f(const int & i) { return i * i * i;}
 int main()
