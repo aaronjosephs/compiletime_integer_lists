@@ -1,5 +1,6 @@
 progs = Split( '''
         generate
+        generate_with_function
         ''')
 
 cxx = 'c++'
