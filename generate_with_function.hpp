@@ -1,23 +1,29 @@
-template <bool B, size_t Count,int ... Nums>
+#include <array>
+template <bool B, size_t Count, int Current, int Gen(const int &), int ... Nums>
 struct generator;
 
-template <size_t Count>
-struct generator<false,Count,0>
+
+template <size_t Count, int Current, int Gen(const int &), int ... Results>
+struct generator<false,Count,Current, Gen, Results...>
 {
-    constexpr static std::array<int,Count> array
-        = generator<false,Count,1,f(0)>::array; 
+        constexpr static std::array<int,Count>  array =
+        generator<Current+1==Count,Count,Current+1,Gen,Gen(Current), Results...>::array;
 };
 
-template <size_t Count, int Current, int ... Results>
-struct generator<false,Count,Current, Results...>
+template <size_t Count, int Current, int Gen(const int &), int ... Results>
+struct generator<true,Count,Current,Gen,Results...>
 {
-    constexpr static std::array<int,Count>  array 
-        = generator<Current+1==Count,Count,Current+1,f(Current), Results...>::array;
+        constexpr static std::array<int,Count> array = {{Results...}};
 };
-
-template <size_t Count, int Current, int ... Results>
-struct generator<true,Count,Current,Results...>
+/*
+template <size_t Count, int Gen(const int &)>
+struct gen {                                                                 
+        constexpr static std::array<int, Count> array = generator<false, Count, 0, Gen>::array;
+};
+*/
+template <size_t Count, int Gen(const int &)>
+constexpr  std::array<int,Count> generate()
 {
-    constexpr static std::array<int,Count>  array{{Results...}};
-};
+    return generator<false,Count,0,Gen>::array;
+}
 
